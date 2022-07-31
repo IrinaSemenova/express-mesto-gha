@@ -2,7 +2,7 @@
 # Проект Mesto фронтенд + бэкенд
 
 ## Ссылка на проект
-(https://irinasemenova.github.io/express-mesto-gha/)
+https://irinasemenova.github.io/express-mesto-gha/
 
 ## Настройка бейджей статуса тестов
 Перед началом работы над проектом рекомендуется исправить бейджи, отражающие статус прохождения тестов.
