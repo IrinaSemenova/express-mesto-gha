@@ -7,15 +7,15 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: false,
-    minlength: [2, 'Поле должно быть не менее 2-ух символов'],
-    maxlength: [30, 'Поле должно быть не более 30-ти символов'],
+    minlength: 2,
+    maxlength: 30,
     default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,
     required: false,
-    minlength: [2, 'Поле должно быть не менее 2-ух символов'],
-    maxlength: [30, 'Поле должно быть не более 30-ти символов'],
+    minlength: 2,
+    maxlength: 30,
     default: 'Исследователь',
   },
   avatar: {
@@ -50,13 +50,13 @@ userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new NotAuthorizationError('Неправильные почта или пароль'));
+        throw new NotAuthorizationError('Неправильные почта или пароль');
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new NotAuthorizationError('Неправильные почта или пароль'));
+            throw new NotAuthorizationError('Неправильные почта или пароль');
           }
 
           return user; // теперь user доступен
