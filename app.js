@@ -37,16 +37,17 @@ app.post('/signup', celebrate({
 app.use(auth);
 app.use(routerUsers);
 app.use(routerCards);
+
+app.use('*', (req, res, next) => {
+  next(new NotFoundError('Страница не найдена'));
+});
+
 app.use(errors()); // обработчики ошибок
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
   next();
-});
-
-app.use('*', (req, res, next) => {
-  next(new NotFoundError('Страница не найдена'));
 });
 
 app.listen(PORT, () => {
