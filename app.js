@@ -45,8 +45,8 @@ app.use((err, req, res, next) => {
   next();
 });
 
-app.all('/*', () => {
-  throw new NotFoundError('Страница не найдена');
+app.use('*', (req, res, next) => {
+  next(new NotFoundError('Страница не найдена'));
 });
 
 app.listen(PORT, () => {
