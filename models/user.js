@@ -6,21 +6,18 @@ const NotAuthorizationError = require('../error/notauthorization-error');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: false,
     minlength: 2,
     maxlength: 30,
     default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,
-    required: false,
     minlength: 2,
     maxlength: 30,
     default: 'Исследователь',
   },
   avatar: {
     type: String,
-    required: false,
     validate: {
       validator(url) {
         return /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w.-]*)*\/?$/.test(url);

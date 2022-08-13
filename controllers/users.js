@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const IncorrectReqError = require('../error/incorrect-req-error');
 const ConflictError = require('../error/conflict-error');
-const NotAuthorizationError = require('../error/notauthorization-error');
 const NotFoundError = require('../error/not-found-error');
 
 // Возвращает всех пользователей
