@@ -7,15 +7,15 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: false,
-    minlength: 2,
-    maxlength: 30,
+    minlength: [2, 'Поле должно быть не менее 2-ух символов'],
+    maxlength: [30, 'Поле должно быть не более 30-ти символов'],
     default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,
     required: false,
-    minlength: 2,
-    maxlength: 30,
+    minlength: [2, 'Поле должно быть не менее 2-ух символов'],
+    maxlength: [30, 'Поле должно быть не более 30-ти символов'],
     default: 'Исследователь',
   },
   avatar: {
