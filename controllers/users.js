@@ -37,26 +37,25 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  User.findOne({ email })
-    .then((userConflict) => {
-      if (userConflict) {
-        throw new ConflictError('Указанный email занят');
-      } else {
-        bcrypt.hash(password, 10)
-          .then((hash) => User.create({
-            name, about, avatar, email, password: hash,
-          }))
-          .then(() => res.send({
-            name, about, avatar, email,
-          }));
-      }
+  bcrypt.hash(password, 10)
+    .then((hash) => {
+      User.create({
+        name, about, avatar, email, password: hash,
+      })
+        .then(() => res.send({
+          name, about, avatar, email,
+        }))
+        .catch((err) => {
+          if (err.code === 11000) {
+            next(new ConflictError('Пользователь с таким E-Mail уже существует'));
+          } else if (err.name === 'ValidationError') {
+            next(new IncorrectReqError('Некорректные данные при создании пользователя'));
+          } else {
+            next(err);
+          }
+        });
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new IncorrectReqError('Переданы некорректные данные'));
-        return;
-      } next(err);
-    });
+    .catch(next);
 };
 
 // Возвращает пользователя по _id

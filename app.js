@@ -8,6 +8,7 @@ const routerCards = require('./routes/cards');
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./error/not-found-error');
+const { linkValidate } = require('./utils/link-validate');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -28,12 +29,17 @@ app.post('/signin', celebrate({
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w.-]*)*\/?$/),
+    avatar: Joi.string().regex(linkValidate),
   }),
 }), createUser);
+
+app.get('/signout', (req, res) => {
+  res.clearCookie('authorization').send({ message: 'Выход' });
+});
+
 app.use(auth);
 app.use(routerUsers);
 app.use(routerCards);

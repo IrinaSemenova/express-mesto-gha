@@ -31,8 +31,7 @@ module.exports.deleteCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточка не найдена');
       }
-      // eslint-disable-next-line eqeqeq
-      if (card.owner != req.user._id) {
+      if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Нет прав на удаление данной карточки');
       } else {
         Card.findByIdAndRemove(req.params.cardId)
