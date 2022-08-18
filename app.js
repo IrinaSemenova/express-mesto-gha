@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const { errors, celebrate, Joi } = require('celebrate');
 const bodyParser = require('body-parser');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
 const { createUser, login } = require('./controllers/users');
@@ -18,6 +19,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(express.json());
+app.use(requestLogger); // подключаем логгер запросов
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -44,11 +46,13 @@ app.use(auth);
 app.use(routerUsers);
 app.use(routerCards);
 
+app.use(errorLogger); // подключаем логгер ошибок
+
+app.use(errors()); // обработчики ошибок
+
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Страница не найдена'));
 });
-
-app.use(errors()); // обработчики ошибок
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
